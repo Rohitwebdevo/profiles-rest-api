@@ -7,6 +7,7 @@ from rest_framework import viewsets
 from profiles_api import models
 from rest_framework.authentication import TokenAuthentication
 from profiles_api import permissions
+from rest_framework import filters
 
 # Create your views here.
 class HelloApiView(APIView):
@@ -50,6 +51,7 @@ class HelloApiView(APIView):
         """Delete an object"""
         return Response({'method': 'DELETE'})
     
+
 class HelloViewSet(viewsets.ViewSet):
     """Test API Viewset"""
     serializer_class = serializers.HelloSerializer
@@ -95,10 +97,12 @@ class HelloViewSet(viewsets.ViewSet):
         """Handle removing an object"""
         return Response({'http_method': 'DELETE'})
     
+
 class UserProfileViewSet(viewsets.ModelViewSet):
     """Handle creating, creating and updating profiles"""
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
-    
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email',)
